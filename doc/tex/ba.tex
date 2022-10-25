@@ -1,0 +1,129 @@
+\documentclass[a4paper, 11pt, toc=listof, toc=bib, twoside=off]{scrbook}
+
+% Quelle: https://www.fh-swf.de/media/neu_np/fb_in/professorinnen_3/giefers/pub/docs/LaTeX-Vorlage_Abschlussarbeit.zip
+% Vorlage fuer Abschlussarbeiten
+% Version 2022-05-17
+% Getestet mit TeX Live; Kodierung: UTF8
+
+% Hier Daten eintragen:
+\newcommand{\name}{Jonas Michel Berger}
+\newcommand{\abschlussarbeit}{Bachelorarbeit}
+\newcommand{\hochschule}{Fachhochschule Südwestfalen}
+\newcommand{\datum}{2. November 2022}
+\newcommand{\titeldeutsch}{Entwicklung eines Telegram-Bots zur Abfrage von Informationen aus der Software Graylog per Sprachnachricht}
+\newcommand{\titelenglisch}{Development of a Telegram Bot to Retrieve Information From Graylog Software via Voice Message}
+\newcommand{\erstpruefer}{Prof. Dr. Hans-Georg Eßer}
+\newcommand{\zweitpruefer}{Prof. Dr. Heiner Giefers}
+% Ende der Daten
+
+\usepackage[inner=25mm, outer=25mm, top=25mm, bottom=25mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+
+% https://tex.stackexchange.com/questions/150945/automatic-german-quotation-marks
+\usepackage{xspace}
+
+\let\oldquote'
+\newif\ifquoteopen
+\catcode`\'=\active
+\makeatletter
+% we have to redefine \pr@m@s to use an active '
+\def\pr@m@s{%
+  \ifx'\@let@token
+    \expandafter\pr@@@s
+  \else
+    \ifx^\@let@token
+      \expandafter\expandafter\expandafter\pr@@@t
+    \else
+      \egroup
+    \fi
+  \fi}
+\protected\def'{%
+  \ifmmode
+    \expandafter\active@math@prime
+  \else
+    \expandafter\active@text@prime
+  \fi}
+\def\active@text@prime{%
+   \@ifnextchar'{%
+     \ifquoteopen
+       \global\quoteopenfalse\grqq\expandafter\@gobble
+     \else
+       \global\quoteopentrue\glqq\expandafter\@gobble
+     \fi
+   }{%
+     \ifquoteopen
+       \global\quoteopenfalse\grq\xspace
+     \else
+       \global\quoteopentrue\glq
+     \fi
+   }%
+}
+\makeatother
+\usepackage[style=alphabetic, backend=biber, citestyle=ieee, bibstyle=numeric]{biblatex}
+\addbibresource{literatur.bib}
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+%\usepackage{scrlayer-scrpage}\lohead{\rightmark}\rehead{\leftmark}\ohead{\pagemark}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{scrhack}
+\usepackage{hyperref}
+\usepackage{placeins}
+\parindent0pt\parskip6pt
+
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Listing}
+\renewcommand{\lstlistlistingname}{Listingverzeichnis}
+\lstset{basicstyle=\small\ttfamily, breaklines=true, numbers=left}
+\lstset{literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+    {~}{{\textasciitilde}}1
+}
+
+\usepackage[normalem]{ulem}
+
+\addto\extrasngerman{
+%\renewcommand{\figureautorefname}{foo}
+%\renewcommand{\tableautorefname}{bar}
+%\renewcommand{\sectionautorefname}{foobar}
+\renewcommand{\subsectionautorefname}{Abschnitt}
+}
+
+\linespread{1.15}
+
+\graphicspath{ {./img/} }
+
+\begin{document}
+\frontmatter
+\input{01_pre}
+\tableofcontents
+
+\mainmatter
+%\ofoot*{}
+\input{10_einleitung}
+\input{20_grundlagen}
+\input{30_planung}
+\input{40_implementierung}
+\input{50_praxiseinsatz}
+\input{60_fazit}
+\input{70_anhang}
+
+\backmatter
+\printbibliography[title=Literaturverzeichnis]
+\begingroup
+\let\clearpage\relax
+\listoffigures
+\listoftables
+\lstlistoflistings
+\endgroup
+\end{document}

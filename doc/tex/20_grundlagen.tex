@@ -1,0 +1,183 @@
+\chapter{Grundlagen}
+\label{cha:grundlagen}
+
+In diesem Kapitel werden Technologien und Produkte erläutert, auf welchen die zu implementierende Software basiert.
+
+\section{REST}
+
+REST ist eine Abkürzung für 'Representational State Transfer' \cite[S. 76 ff.]{rest}. Es handelt sich hierbei um ein Vorbild für einen Softwarearchitekturstil, welches in der Entwicklung verteilter Systeme Anwendung findet. REST-APIs werden für viele Dienste des Internets meist unsichtbar für die Anwender für die Kommunikation zwischen informationstechnischen Systemen verwendet. In der englischen Sprache wird häufig das Adjektiv 'RESTful' für Ressourcen verwendet, welche die REST-Prinzipien anwenden \cite[S. 277]{swdev}.
+
+\subsection{Anwendung in der Praxis}
+
+Heutzutage stellen viele Dienste HTTP-APIs zur Verfügung, welche als 'RESTful' bezeichnet werden können. Die Kommunikation mit den Programmierschnittstellen beschränkt sich dabei auf die HTTP- und HTTPS-Protokolle, welche auch für den Abruf von Webinhalten im Browser verwendet werden. Durch die hohe Verbreitung wird die Implementierung neuer vernetzter Applikationen für Softwareentwickler stark vereinfacht.
+
+Der Zugriff auf HTTP-APIs erfolgt analog zum Zugriff auf Webseiten. Je nach Anforderung werden die HTTP-Methoden 'GET', 'POST' und weitere verwendet \cite[S. 279]{swdev}. Die von der HTTP-API beziehbaren Informationen werden mit der URL (Uniform Resource Locator) lokalisiert und angefordert. Zusätzlich können Informationen über Header (Kopfzeilen) und Cookies ausgetauscht werden, um beispielsweise Zustandsinformationen (Status des Warenkorbs in einem Webshop, Identifikationsnummer des angemeldeten Benutzers) übertragen zu können.
+
+\begin{lstlisting}[caption={Beispiel eines Aufrufs der Graylog REST-API.}, label=bsp-rest-api, numbers=none, xleftmargin=6mm]
+GET http://10.10.12.1:9000/api/cluster
+\end{lstlisting}
+\begin{lstlisting}[xleftmargin=6mm]
+{
+  "12ac8e44-0c59-4c38-bd5e-4fe247a55893": {
+    "facility": "graylog-server",
+    "codename": "Noir",
+    "node_id": "12ac8e44-0c59-4c38-bd5e-4fe247a55893",
+    "cluster_id": "8421ad08-fe62-4a04-8576-a81cab1a9c55",
+    "version": "4.3.6+36120cf",
+    "started_at": "2022-09-10T23:15:05.435Z",
+    "hostname": "graylog.home.arpa",
+    "lifecycle": "running",
+    "lb_status": "alive",
+    "timezone": "Europe/Berlin",
+    "operating_system": "Linux 5.4.0-125-generic",
+    "is_processing": true
+  }
+}
+\end{lstlisting}
+
+Die Antwort der HTTP-API erfolgt in vielen Fällen maschinenlesbar in der Sprache JSON \cite[S. 281]{swdev}, wie in \autoref{bsp-rest-api} ab der ersten Zeile zu sehen.
+
+\section{Telegram Messenger}
+
+Der Dienst Telegram bietet seinen Nutzern eine Möglichkeit um kostenlos miteinander u.\,a. über Apps für die Mobilbetriebssysteme Android und iOS zu kommunizieren. Telegram hatte nach nach eigenen Angaben weltweit im Juni 2022 erstmals über 700 Millionen monatliche Nutzer und befand sich unter den fünf Apps mit den höchsten Downloadzahlen\footnote{\url{https://telegram.org/blog/700-million-and-premium}}. Der Dienst stellt damit eine beliebte Alternative zu anderen Messengern wie WhatsApp oder Signal dar. Ein Alleinstellungsmerkmal von Telegram gegenüber WhatsApp oder Signal sind die Bots und die dazugehörige API.
+
+\subsection{Bots}
+
+Der Begriff Bot stammt von dem englischen Begriff 'robot' ab und bezeichnet ein Programm, welches einfache und wiederkehrende Aufgaben selbstständig erledigt. Bots werden heutzutage an vielen Stellen eingesetzt, beispielsweise in Telefonwarteschleifen oder in Webshops in Form von virtuellen Beratern für den Verkauf oder den Service. Der Telegram Messenger bietet Softwareentwicklern die Möglichkeit, mittels einer HTTP-API einen Bot auf vielfältige Weise an eigene Software anzubinden. Der Bot agiert Benutzern auf der Telegram-Plattform gegenüber wie ein normaler Verbindungspartner mit dem Unterschied, dass dieser zuerst mit einer Initialnachricht ('/start') vom Benutzer aktiviert werden muss. So wird verhindert, dass  Benutzer ohne Zustimmung kontaktiert werden können. Bots können auch zu Gruppen hinzugefügt werden. Dem Entwickler stehen zahlreiche und ausführlich dokumentierte API-Funktionen\footnote{\url{https://core.telegram.org/bots/api\#available-methods}} zur Verfügung, sodass die vom Bot ausgehende Kommunikation nicht auf Textnachrichten limitiert ist. Bots stehen u.\,a. folgende Möglichkeiten zur Verfügung:
+
+\begin{itemize}
+\item Senden und Empfangen von Audio-, Bild- und Videodateien, Sprachnachrichten und Standortdaten
+\item Erstellen von Umfragen in einer Gruppe
+\item Abfrage von Informationen der aktiven Kommunikationspartner: Profilbild, Name, Zeitpunkt der letzten Erreichbarkeit (sofern vom Benutzer freigegeben)
+\item Gruppenadministration: Setzen und Entfernen von MOTD-Nachrichten (dt. "Mitteilungen des Tages")
+\item Vereinfachte Bedienung durch vom Entwickler definierte Antwortmöglichkeiten, welche durch den Anwender direkt mittels Buttons gewählt werden können
+\end{itemize}
+
+Aufgrund der weitreichenden Möglichkeiten, der kostenlosen Benutzbarkeit und der für Anwendungsfälle mit bis zu 30 API-Zugriffen pro Sekunde ausreichenden Durchsatzratenbegrenzung\footnote{\url{https://core.telegram.org/bots/faq\#my-bot-is-hitting-limits-how-do-i-avoid-this}} steht eine Vielzahl von Bots für die Benutzer der Plattform zur Verfügung. Als Beispiele seien genannt der Bot "WDR aktuell" <\lstinline{@WDRaktuell_bot}> für den Abruf von regionalen Informationen in Nordrhein-Westfalen, der von Google angebotene und daher als "verifiziert"\footnote{\url{https://telegram.org/verify}} markierte "Gmail Bot" <\lstinline{@GmailBot}> für den Nachrichtenabruf und das Senden von Antworten für Gmail sowie der Bot IFTTT ("if this then that") <\lstinline{@IFTTT}>, welcher die Automatisierung und Verknüpfungen von Webanwendungen erleichtert.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.7]{telegram-bot-beispiel}
+\caption{Interaktion mit dem Bot von WDR aktuell in Telegram für macOS.}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.7]{verified_ifttt_bot}
+\caption{Verifizierter IFTTT-Bot in der Suche von Telegram für macOS.}
+\end{figure}
+
+\subsubsection{Beziehen von Aktualisierungen von der Telegram API}
+\label{sec:telegram-getting-updates}
+
+Laut der technischen Dokumentation der Telegram API\footnote{\url{https://core.telegram.org/bots/api\#getting-updates}} stehen zwei Möglichkeiten zur Verfügung, um Aktualisierungen zu erhalten: Long-polling mit der API-Methode \lstinline{getUpdates()} oder die Verwendung eines Webhooks. Die beiden Möglichkeiten verwenden unterschiedliche Konzepte und bieten damit verschiedene Vor- und Nachteile. 
+
+Im Fachbereich der Informatik steht der Begriff Polling für eine dauerhafte wiederkehrende Abfrage von Informationen bei einem Dienst. Diese Technik beansprucht viel CPU-Zeit eines Systems und wird aufgrund des geringen Gegenwerts der meist leer ausgehenden Abfragen als teuer bezeichnet. Long-polling beschreibt eine Technik, bei welcher der Client einer HTTP-Abfrage einen verlängerten Zeitraum bis zum Erhalt der Antwort vom Server akzeptiert, ohne die Abfrage aufgrund einer Zeitüberschreitung abzubrechen. Die Länge des Zeitraums ist variabel. Long-polling bietet damit gegenüber dem klassischen Polling den Vorteil, dass die benötigte Rechenzeit durch die verlängerten Abfragezeiträume stark reduziert wird. 
+
+Die Software- und Betriebssystementwicklung bietet eine Technik, um die Verwendung von teurem Polling zu umgehen: die Verwendung von Interrupts oder Callbacks (dt. Rückruf). Hierbei erhält der Absender der Anfrage eine Rückmeldung, sobald die Antwort vorliegt. Der Vorteil dieser Technik ist, dass nach dem Absenden der Anfrage keine CPU-Zeit seitens des Absenders notwendig ist. Es muss jedoch eine Möglichkeit vorhanden sein, den Absender im Falle einer eingehenden Antwort zum Vorgang zurückzuführen, sodass die weitere Bearbeitung möglich wird. Im Falle der Anbindung der Telegram API übernimmt dies der Webhook. Der Webhook muss (durch die Telegram-API) öffentlich aus dem Internet erreichbar und durch den Verwalter des Bots im Vorhinein durch eine entsprechende URL definiert worden sein. Wird eine Nachricht an den Bot gesendet, prüft die Telegram-API intern, ob Definitionen für Webhooks vorliegen. Im positiven Fall sendet die Telegram API eine HTTP-Anfrage an die URL des Webhooks mit den Details zur eingegangenen Nachricht. Nach Erhalt der Anfrage durch den Webhook muss dieser die Daten zur verarbeitenden Software zurückführen und die weitere Bearbeitung auslösen.
+
+\subsubsection{Erstellung eines Bots}
+
+Um ein Programm über die Telegram Bot-API anbinden zu können, muss zuvor ein Bot über Telegram erstellt werden. Hierzu wird der Bot \lstinline{@BotFather} verwendet. Sämtliche Einstellungen zu Bots werden über \lstinline{@BotFather} vorgenommen. Soll ein neuer Bot erstellt werden, werden die benötigten Informationen abgefragt. Nachdem der Anzeigename und der Benutzername festgelegt werden, erhält der Benutzer die Zugangsdaten für die HTTP-API und der Bot ist einsatzbereit. \lstinline{@BotFather} kann jederzeit erneut kontaktiert werden, um weitere Einstellungen vorzunehmen: es können Profilbild und Beschreibung geändert, sowie vordefinierte Kommandos festgelegt werden. Der Zugriff auf die HTTP-API erfolgt über die Basis-URL \lstinline{https://api.telegram.org/bot<token>/METHOD_NAME}\footnote{\url{https://core.telegram.org/bots/api\#making-requests}}, wobei \lstinline{<token>} der von \lstinline{@BotFather} erhaltene Zugriffsschlüssel und \lstinline{METHOD_NAME} die API-Methode (beispielsweise \lstinline{getUpdates} oder \lstinline{sendMessage}) ist. Weitere laut API-Dokumentation benötigte Parameter werden als Parameter der HTTP-Anfragen vom Typ 'GET' oder 'POST' übermittelt. Die Antwort der API erfolgt in Form eines JSON-Objekts.
+
+\begin{lstlisting}[caption={Beispiel eines Aufrufs der Telegram HTTP-API. Erhalt einer Textnachricht "Hallo Welt".}, label=lst:bsp-telegram-api, numbers=none, xleftmargin=6mm]
+GET https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getUpdates
+\end{lstlisting}
+\begin{lstlisting}[xleftmargin=6mm]
+{
+    "ok": true,
+    "result": [
+        {
+            "update_id": 987654321,
+            "message": {
+                "message_id": 626,
+                "from": {
+                    "id": 12345678,
+                    "is_bot": false,
+                    "first_name": "Jonas",
+                    "username": "**entfernt**",
+                    "language_code": "de"
+                },
+                "chat": {
+                    "id": 12345678,
+                    "first_name": "Jonas",
+                    "username": "**entfernt**",
+                    "type": "private"
+                },
+                "date": 1662808990,
+                "text": "Hallo Welt"
+            }
+        }
+    ]
+}
+\end{lstlisting}
+
+\section{Graylog Open}
+
+Graylog Open ist ein Softwareprodukt der Firma Graylog, Inc mit dem Hauptsitz in Houston, Texas in den USA. Das Produkt stellt eine kompakte Verwaltungsoberfläche für die Erfassung von Systemprotokollen bereit, welche in einer Elasticsearch Suchmaschine vorgehalten werden. Der Quellcode der Software kann öffentlich eingesehen werden\footnote{\url{https://github.com/Graylog2/graylog2-server}}. 
+
+Hohe Anforderungen an die (Ausfall-)sicherheit moderner und komplexer IT-Systeme führen zu der Notwendigkeit, die Funktionsfähigkeit der Systeme möglichst allumfassend und automatisiert zu prüfen. Herkömmliche Monitoringsysteme mit einem Fokus auf die Erreichbarkeit oder die Überwachung von vordefinierten Fehlerausgaben erfüllen diese Anforderungen nicht. Fehlerzustände sollen in Echtzeit, möglichst vor und spätestens zum Zeitpunkt einer durch den Anwender spürbaren Einschränkung auffallen. Informationstechnische Systeme in sämtlichen Bereichen sind längst zu komplex geworden, um alle Fehlerquellen im Vorhinein bestimmen und gezielt überwachen zu können. Aus diesem Grund wird ein anderer Ansatz als beim herkömmlichen Monitoring angewendet: die Erfassung der Systemprotokolle der zu überwachenden Systeme. Diese ermöglichen einen umfassenderen Blick auf die aktuellen Ereignisse. Durch die Anwendungsprotokolle können Fehlerzustände eines Webservers beispielsweise bereits nach dem ersten Besuch eines Besuchers einer durch den fehlerhaften Webserver beeinträchtigten Webseite erkannt werden.
+
+\subsection{Erfassung von Systemprotokollen}
+\label{sec:erfassung-systemprotokolle}
+
+Graylog Open ist kompatibel zu einer Vielzahl von Betriebssystemen und Anwendungen. Linuxbasierte Systeme verwenden häufig einen Dienst zur zentralen und systemweiten Erfassung der Anwendungsprotokolle, welcher das in RFC 3164 standardisierte Protokoll Syslog\footnote{\url{https://www.ietf.org/rfc/rfc3164.txt}} verwendet. Dieser schreibt in der Standardkonfiguration vieler aktueller Betriebssysteme auf Basis der Linux-Distribution Debian alle Meldungen in Textform in die Datei \lstinline{/var/log/syslog}, bei Systemen auf Basis der Linux-Distribution Red Hat Enterprise Linux in die Datei \lstinline{/var/log/messages}. Die Position dieser Ausgabedatei auf dem Dateisystem ist für die Verarbeitung der Meldungen in Graylog jedoch nicht wichtig, da die Meldungen nach einer Anpassung der Konfiguration des Dienstes (offiziell wird nur die Software Rsyslog und Syslog-ng von Graylog unterstützt\footnote{\url{https://docs.graylog.org/docs/syslog}}) über das Netzwerk per UDP und mit optionaler TLS-Verschlüsselung an Graylog übertragen werden. In Graylog muss hierzu die Annahme von Daten über das Netzwerk mit dem syslog-Protokoll aktiviert werden. Mittels einer Input-Konfiguration wird ein Port an der zum überwachenden System nächstgelegenen Netzwerkschnittstelle eröffnet, auf welchem die Software auf eintreffende Meldungen im syslog-Format lauscht.
+
+Auch mit Docker bereitgestellte Microservices können global überwacht werden, ohne die Konfiguration der Container oder sogar die der Anwendungen in einem gestarteten Container einzeln anpassen zu müssen. Hierzu wird nicht das syslog-Protokoll, sondern das von Docker ohnehin unterstützte\footnote{\url{https://docs.docker.com/config/containers/logging/gelf/}} Protokoll GELF verwendet. Es ist eine zentrale Änderung der Konfiguration des Docker-Dienstes notwendig, um fortan die Protokolle aller neu gestarteten Container über das wahlweise UDP- oder TCP-basierte GELF-Protokoll an die Graylog-Instanz zu senden. Die an Graylog übertragenen Daten entsprechen der Ausgabe des Kommandos \lstinline{docker logs}. Um den Empfang von Daten über das GELF-Protokoll seitens Graylog zu ermöglichen, ist es analog zur Einrichtung für das syslog-Protokoll notwendig, mittels einer Input-Konfiguration einen Port auf einer Netzwerkschnittstelle zu reservieren.
+
+Systemprotokolle aus Windows können nicht direkt verarbeitet werden. Es ist der Einsatz einer Middleware wie Winlogbeat notwendig, welche die Protokolle auf dem System erfasst und die Daten über ein Netzwerkprotokoll an Graylog sendet.\footnote{\url{https://docs.graylog.org/docs/windows}}
+
+\subsection{Verarbeitung}
+
+Für die Verarbeitung der erfassten Daten stellt Graylog dem Systemadministrator eine Vielzahl von Möglichkeiten zur Verfügung. Hier werden lediglich die Möglichkeiten erläutert, welche für das Ziel der Abschlussarbeit, also der sprachgesteuerten Verarbeitung durch den Telegram-Bot, relevant sind. Graylog erhält die Daten verschiedener Systeme über die konfigurierten Input-Konfigurationen (vgl. \autoref{sec:erfassung-systemprotokolle}). Die empfangenen Daten werden in einer Elasticsearch Suchmaschine hinterlegt und nach vom Administrator definierten Filterausdrücken durchsucht. Hierbei können bestimmte Parameter mit regulären Ausdrücken aus den empfangenen Daten in eigenen Attributen hinterlegt werden, wie in \autoref{fig:graylog-bsp-msg} zu sehen. Die erfassten Nachrichten sind im Anschluss inkl. der oben genannten Attribute über die Weboberfläche und die REST-API durchsuchbar. Für die Suche wird eine an Apache Lucene (Programmbibliothek für Volltextsuche) angelehnte Syntax verwendet. Diese ermöglicht die Entwicklung komplexer Suchbegriffe. Ein möglicher Suchbegriff für den ganzzahligen Parameter \lstinline{http_response_code} aus der \autoref{fig:graylog-bsp-msg} im Bereich 400 bis 499 wäre beispielsweise \lstinline{http_response_code:[400 TO 499]}. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.7]{graylog-bsp-msg}
+\caption{Extrahieren von Daten aus eingehenden Meldungen in Graylog.}
+\label{fig:graylog-bsp-msg}
+\end{figure}
+
+\subsection{Zugriff per API}
+
+Graylog stellt eine REST-API zur Verfügung, auf welche sowohl mit der integrierten Webschnittstelle als auch programmgesteuert aus der Ferne zugegriffen werden kann. Die integrierte Webschnittstelle nutzt die API für das Beziehen der Informationen aus der Elasticsearch Suchmaschine. Jede Graylog-Instanz bietet standardmäßig eine interaktive Oberfläche an, über welche auf die Dokumentation der verfügbaren Funktionen zugegriffen werden kann. Es ist ebenfalls möglich, die API-Funktionen aus dem Browser heraus mit selbstgewählten Parametern aufzurufen. Dies erleichtert die Softwareentwicklung, da so keine externen Werkzeuge für den Zugriff auf die API verwendet werden müssen.
+
+\section{Amazon Web Services}
+
+Der Cloudanbieter AWS ist ein Tochterunternehmen des US-amerikanischen Versandhändlers Amazon. Das Unternehmen bietet seine Dienste vor allem für professionelle Endanwender und Unternehmen an. AWS bietet eine Vielzahl von Diensten, welche on-demand (dt. auf Abruf) verfügbar sind, nach dem Prinzip 'pay as you go' (dt. 'abgerechnet nach Verbrauch') berechnet werden. Zu den bekanntesten Diensten zählen EC2 (elastic compute cloud), welcher virtuelle Maschinen bereitstellt, sowie S3 (simple storage service), für das Buchen von Speicherkapazität. AWS gehört neben den allesamt US-amerikanischen Anbietern Microsoft Azure, Google Cloud, Oracle Cloud sowie dem chinesischen Anbieter Alibaba Cloud laut dem Marktforschungsunternehmen Gartner zu den führenden Cloudanbietern weltweit\footnote{\url{https://www.gartner.com/technology/media-products/reprints/AWS/1-271W1OSP-DEU.html}}. Derzeit gibt es keinen gleichwertigen Anbieter aus Europa. IONOS und Strato aus Deutschland sowie OVH aus Frankreich bieten nur einen Bruchteil der Umfänge der Konkurrenten an.
+
+AWS betreibt weltweit zahlreiche Rechenzentren weltweit und stellt einen Großteil der Dienste an allen Standorten zur Verfügung. Zahlreiche Dienste lassen sich über die Webschnittstelle 'AWS Konsole' verwalten. Als on-demand Anbieter steht für sämtliche Dienste auch die Bedienung über eine API-Softwareschnittstelle zur Verfügung, sodass Ressourcen bei Bedarf von Programmen selbstständig gebucht und vollständig verwaltet werden können. Die Abrechnung variiert je nach Dienst. Rechenressourcen werden nach Stunden oder Minuten abgerechnet, Speicherressourcen nach Datenmenge und auftragsbasierte Dienste (vgl. \autoref{sec:amazon-transcribe}) nach Auftragskontingenten. AWS bietet zusätzlich ein freies Kontingent an. Die anfallenden Kosten lassen sich im Vorhinein mit dem AWS Pricing Calculator\footnote{\url{https://calculator.aws/}} bestimmen. 
+
+Für die Verwendung der AWS API mit der Programmiersprache Python stellt ein Entwicklerteam das offizielle SDK unter dem Namen Boto3 zur Verfügung. Das SDK erleichtert die Bedienung der verschiedenen API-Funktionen in Verbindung mit der Programmiersprache Python. Es wird mit von einzelnen API-Anfragen entkoppelten Objekten gearbeitet\footnote{\url{https://boto3.amazonaws.com/v1/documentation/api/latest/guide/resources.html}}, damit entfällt die eigenständige Kommunikation mit der API durch die implementierte Software (beispielsweise mit der Programmbibliothek Requests) vollständig. Das SDK übernimmt weiterhin die Authentifizierung gegenüber der API. Ein Objekt repräsentiert jeweils einen AWS-Dienst (siehe folgende Unterabschnitte) in der Softwareumgebung und ermöglicht eine einfache Einbindung in die Software. Die verfügbaren API-Funktionen können als Methoden des Objekts in Python direkt verwendet werden.
+
+\subsection{Amazon Transcribe}
+\label{sec:amazon-transcribe}
+
+Mit dem Dienst Amazon Transcribe können Audiodateien in Text mittels künstlicher Intelligenz transkribiert werden. Der Dienst unterstützt mehrere Sprachen und Dialekte. Standardmäßig wird ein allgemeines Sprachmodell des Anbieters verwendet. Es ist auch möglich, ein eigenes Sprachmodell zu trainieren und importieren. Bei der Bedienung über die AWS Konsole muss ein URI zu einer Audiodatei in einem S3-Speicher angegeben werden. Im Bezug auf S3-Speicher unterscheiden sich URI und URL voneinander. Die Unterschiede werden im \hyperref[sec:unterschied-uri-url]{nächsten Unterkapitel} erläutert. Der Dienst hinterlegt den Text in einer Datei ebenfalls in einem S3-Speicher, optional kann dabei der Quellspeicher eingestellt werden. 
+
+Eine Übersetzung in Echtzeit ist nicht möglich. Das Limit für gleichzeitige Vorgänge pro Benutzer liegt bei 100. Neue Aufträge können so lange nicht eingereicht werden, bis die Anzahl wieder unter dem Limit liegt. Bei einer absehbaren Überschreitung des Limits kann eine Auftragswarteschlange verwendet werden, um die Aufträge zuzuführen. 
+
+Die Abrechnung erfolgt außerhalb des freien Kontingents nach Zeitkontingenten und beginnt bei 0,024 USD pro angefangene Minute.
+
+\subsubsection{Unterschied von URI und URL}
+\label{sec:unterschied-uri-url}
+
+Ein URL (engl. 'uniform resource locator') gibt den Weg zu einer Ressource an. Ein URI (engl. 'uniform resource identifier') gibt nicht unbedingt den Weg zu einer Ressource an, aber dessen Identifikationsmerkmal (beispielsweise ein vergebener Name). S3-URIs enthalten den Dateipfad einer Datei in einem S3-Speicher in jeweils einer geographischen Region (Beispielsweise am AWS Standort 'eu-central-1' in Frankfurt). In anderen Regionen können gleichnamige S3-Speicher erstellt werden. Um zwischen diesen Speichern zu unterscheiden, wird ein URL benötigt, da dieser den öffentlichen Ort des Dokuments angibt. Ein Beispiel für eine S3-URI ist \lstinline{s3://ba-telegram-graylog-bot/audio/tts001.mp3}. Ein Beispiel für eine S3-URL zu derselben Ressource am Standort 'eu-central-1' ist \lstinline{https://ba-telegram-graylog-bot.s3.eu-central-1.amazonaws.com/audio/tts001.mp3}. 
+
+\subsection{Amazon Polly}
+
+Polly ist ein TTS-Dienst (Abkürzung für 'text-to-speech', dt. 'Text zu Sprache') und bildet das Gegenstück zu Amazon Transcribe. Der Dienst unterstützt ebenfalls mehrere Sprachen und Dialekte. Je nach Sprache können verschiedene Modelle verwendet werden, welche verschiedene Persönlichkeiten und Geschlechter darstellen. Dabei wird zwischen den Typen 'standard' und 'neural' unterschieden. 'Neural'-Modelle erzeugen eine gegenüber dem Typ 'standard' optimierte Ausgabe, welche der menschlichen Aussprache so ähnlich wie möglich kommen soll. 
+
+Die Abrechnung erfolgt außerhalb des freien Kontingents nach Zeichenkontingenten und beginnt bei 4 USD für eine Million Zeichen. Der Typ 'neural' kostet bei gleicher Verwendung etwa das Vierfache. 
+
+\section{Verwandte Arbeiten}
+
+Im Folgenden werden wissenschaftliche Arbeiten mit ähnlichen Zielsetzungen vorgestellt und die Unterschiede zu dieser Arbeit erläutert.
+
+\subsection{Voice-controlled order system}
+
+Die Abschlussarbeit von David Höijer und Hannes Jansson von der staatlichen Hochschule Halmstad in Schweden mit dem Titel "Voice-controlled order system" und veröffentlicht am 14.06.2021 behandelt die Planung und Implementierung eines Sprachassistenten für die Aufgabe von Bestellungen bei Lieferdiensten für Lebensmittel\footnote{\url{http://urn.kb.se/resolve?urn=urn:nbn:se:hh:diva-45033}}. Für die Spracherkennung und Verarbeitung der eingegangenen Aufträge wird auf Dienste der Cloudanbieter Amazon Webservices und Google Cloud zurückgegriffen. Die Unterschiede in der Umsetzung zur vorliegenden Arbeit bestehen darin, dass David Höijer und Hannes Jansson sich für eine Spracherkennung mit künstlicher Intelligenz durch Google Dialogflow und damit gegen ein statisches Modell, wie es in dieser Arbeit eingesetzt wird, entschieden haben. 
+
+\subsection{Chatbot capable of information search}
+
+Michal Ďurista entwickelte im Rahmen seiner Bachelorarbeit an der technischen Universität Brünn in Tschechien aus dem Jahr 2019 einen Chatbot, welcher Benutzern Informationen von einer Webseite auf Abruf zur Verfügung stellt\footnote{\url{https://www.fit.vut.cz/study/thesis/21921/}}. Die Benutzer kontaktieren den Bot dabei in Alltagssprache. Mithilfe von künstlicher Intelligenz analysiert der Bot die Nachrichtenbestandteile und ermittelt so die gewünschten Informationen. Der Autor erwähnt in der Arbeit Aspekte der Verarbeitung natürlicher Sprache und verwendet für die Implementierung Dienste von Microsoft Azure. Der Unterschied zur vorliegenden Arbeit besteht darin, dass die Informationen nicht maschinenlesbar vorliegen. Die Software bestimmt zentrale Schlüsselwörter der Anfragen und verwendet diese für eine oder mehrere Volltextsuchen über die vorliegenden Informationen. Die Auskünfte des Bots beschränken sich dabei auf Produktinformationen zu technischen Bauteilen eines einzelnen Unternehmens.
