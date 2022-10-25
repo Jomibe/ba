@@ -1,1 +1,1 @@
-Dies ist ein archivierter Stand des Repositorys [Jomibe/ba-dev](https://github.com/Jomibe/ba-dev) zum Zeitpunkt der Abgabe der [Bachelorarbeit](https://github.com/Jomibe/ba/blob/main/doc/tex/ba.pdf). Die aktive Entwicklung findet dort statt.
+Dies ist ein archivierter Stand des Repositorys [Jomibe/ba-dev](https://github.com/Jomibe/ba-dev) zum Zeitpunkt der Abgabe der [Bachelorarbeit](http://dx.doi.org/10.13140/RG.2.2.31314.22721). Die aktive Entwicklung findet dort statt.
